@@ -25,7 +25,7 @@ public class MainUi : MonoBehaviour
 
     public void ClickGoButton()
     {
-        Player.go = true;
+        PlayerScript.go = true;
         diceNum = Random.Range(1,6);
         Debug.Log("주사위 : " + diceNum);
         diceUi.GetComponent<Image>().sprite = dice[diceNum - 1];
