@@ -25,9 +25,7 @@ public class PlayerScript : MonoBehaviour
         //blockArr = GameObject.FindGameObjectsWithTag("Block");
         blockArr = GameObject.Find("Environment").GetComponentsInChildren<Transform>();
         blockArr = blockArr.OrderBy(go => go.name).ToArray();
-        
-        substringIndex = 0;
-        
+
         Debug.Log("아이디 : " + view.ViewID);
     }    
 
@@ -69,18 +67,19 @@ public class PlayerScript : MonoBehaviour
     //블럭이동
     void GoBlock()
     {
+        int blockNum = int.Parse(nowPosition.Substring(0, 2));
+
         if (nowPosition != string.Empty)
         {
-            if (nowPosition.Substring(2,2).Equals("바닥"))
-            {
-                substringIndex = nowPosition.IndexOf("바닥");
-            }
-            else if(int.Parse(nowPosition.Substring(0, substringIndex)) > 47)
+            Debug.Log("blockNum : " + blockNum);
+            if (blockNum > 42)
             {
                 MainUi.idTextStatic.text = CreateAndJoinRooms.nickNameTextStatic.text;
                 MainUi.endUiStatic.SetActive(true);
-
-                return;
+            }
+            else if (nowPosition.Substring(2,2).Equals("바닥"))
+            {
+                substringIndex = nowPosition.IndexOf("바닥");
             }
             //transform.position = Vector3.Slerp(transform.position, blockArr[int.Parse(nowPosition.Substring(0, substringIndex))].transform.position + new Vector3(0, 0.3f, 0), 1f);
             transform.position = Vector3.Slerp(transform.position, blockArr[int.Parse(nowPosition.Substring(0, substringIndex))-1 + MainUi.diceNum].transform.position + new Vector3(0, 0.3f, 0), 1f);

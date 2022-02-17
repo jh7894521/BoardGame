@@ -33,6 +33,12 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     List<RoomInfo> myList = new List<RoomInfo>();
     int currentPage = 1, maxPage, multiple;
 
+    //룸 유저 정보
+    //public Image roomMasterImage;
+    //public Image roomPlayerImage;
+    public TextMeshProUGUI roomMasterText;
+    public TextMeshProUGUI roomPlayerText;
+
     //방리스트 갱신
     public void MyListClick(int num)
     {
@@ -56,10 +62,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         for (int i = 0; i < CellButton.Length; i++)
         {
             CellButton[i].interactable = (multiple + i < myList.Count) ? true : false;
-            CellButton[i].transform.GetChild(0).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].Name : "";
-            Debug.Log(CellButton[i].name + " : " + CellButton[i].transform.GetChild(0).GetComponent<Text>().text);
-            CellButton[i].transform.GetChild(1).GetComponent<Text>().text = (multiple + i < myList.Count) ? myList[multiple + i].PlayerCount + "/" + myList[multiple + i].MaxPlayers : "";
-            Debug.Log(CellButton[i].name + " : " + CellButton[i].transform.GetChild(1).GetComponent<Text>().text);
+            CellButton[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (multiple + i < myList.Count) ? myList[multiple + i].Name : "";
+            CellButton[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = (multiple + i < myList.Count) ? myList[multiple + i].PlayerCount + "/" + myList[multiple + i].MaxPlayers : "";
         }
     }
 
@@ -112,10 +116,18 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     {
         playerListText.text = "";
         for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
             playerListText.text += PhotonNetwork.PlayerList[i].NickName + ((i + 1 == PhotonNetwork.PlayerList.Length) ? "" : ", ");
+        }
+
+        roomMasterText.text = PhotonNetwork.PlayerList[0].NickName;
+        if (PhotonNetwork.PlayerList.Length > 1)
+        {
+            roomPlayerText.text = PhotonNetwork.PlayerList[1].NickName;
+        }
+
         roomTitleText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + PhotonNetwork.CurrentRoom.MaxPlayers + "최대";
     }
-    
 
     public void ClickRoomBackButton()
     {
@@ -125,7 +137,10 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void ClickGameStart()
     {
-        PhotonNetwork.LoadLevel("Game");
+        //if (nickNameText.Equals(roomMasterText) && PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        //{
+            PhotonNetwork.LoadLevel("Game");
+        //}
     }
     //방
 
