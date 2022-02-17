@@ -16,8 +16,6 @@ ScriptsOnlyBuild:
     - Photon.Pun.Demo.PunBasics.PlayerUI
     - Photon.Pun.Demo.SlotRacer.PlayerControl
     - Photon.Pun.Demo.SlotRacer.Utils.SplineWalker
-    PhotonUnityNetworking.Editor.dll:
-    - Photon.Pun.PunSceneSettings
     PhotonUnityNetworking.dll:
     - Photon.Pun.PhotonAnimatorView
     - Photon.Pun.PhotonRigidbodyView
@@ -318,6 +316,8 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 2860}
     - Class: 114
+      Script: {instanceID: 3068}
+    - Class: 114
       Script: {instanceID: 3076}
     - Class: 114
       Script: {instanceID: 3174}
@@ -590,7 +590,7 @@ ScriptsOnlyBuild:
     className: GameManager
   - hash:
       serializedVersion: 2
-      Hash: c7fb0a23ff480bf287f4f2f635732d14
+      Hash: 141d2b8d9b33717c41fc6d3b9d3c4cc5
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: CreateAndJoinRooms

@@ -39,6 +39,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public TextMeshProUGUI roomMasterText;
     public TextMeshProUGUI roomPlayerText;
 
+    public PhotonView PV;
+
     //방리스트 갱신
     public void MyListClick(int num)
     {
@@ -137,9 +139,15 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     public void ClickGameStart()
     {
+        PV.RPC("EnterGame", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void EnterGame()
+    {
         //if (nickNameText.Equals(roomMasterText) && PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
         //{
-            PhotonNetwork.LoadLevel("Game");
+        PhotonNetwork.LoadLevel("Game");
         //}
     }
     //방
@@ -185,11 +193,4 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     {
         Application.Quit();
     }
-
-    /*
-    public override void OnJoinedRoom()
-    {
-        PhotonNetwork.LoadLevel("Game");
-    }
-    */
 }
