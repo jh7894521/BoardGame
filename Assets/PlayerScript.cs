@@ -17,7 +17,7 @@ public class PlayerScript : MonoBehaviour
     private int substringIndex;
     private int randomBlock = 0;
     private int bombPower = 100;
-
+    private Vector3 curPos;
     void Start()
     {
         characterRigidbody = GetComponent<Rigidbody>();
@@ -48,6 +48,14 @@ public class PlayerScript : MonoBehaviour
                 GoBlock();
             }
         }
+        // else if((transform.position - curPos).sqrMagnitude >= 100 )
+        // {
+        //     transform.position = curPos;
+        // }
+        // else
+        // {
+        //     transform.position = Vector3.Lerp(transform.position, curPos, Time.deltaTime * 10);
+        // }
     }
 
     void Move()
@@ -74,8 +82,17 @@ public class PlayerScript : MonoBehaviour
             Debug.Log("blockNum : " + blockNum);
             if (blockNum > 42)
             {
-                MainUi.idTextStatic.text = CreateAndJoinRooms.nickNameTextStatic.text;
-                MainUi.endUiStatic.SetActive(true);
+                if(PhotonNetwork.LocalPlayer.NickName == PhotonNetwork.PlayerList[0].NickName)
+                {
+                    MainUi.idTextStatic.text = PhotonNetwork.PlayerList[0].NickName;
+                }
+                else if(PhotonNetwork.LocalPlayer.NickName == PhotonNetwork.PlayerList[1].NickName)
+                {
+                    MainUi.idTextStatic.text = PhotonNetwork.PlayerList[1].NickName;
+                }
+                view.RPC("Winner", RpcTarget.All);
+                // MainUi.idTextStatic.text = PhotonNetwork.LocalPlayer.NickName;
+                // MainUi.endUiStatic.SetActive(true);
             }
             else if (nowPosition.Substring(2,2).Equals("바닥"))
             {
@@ -85,6 +102,24 @@ public class PlayerScript : MonoBehaviour
             transform.position = Vector3.Slerp(transform.position, blockArr[int.Parse(nowPosition.Substring(0, substringIndex))-1 + MainUi.diceNum].transform.position + new Vector3(0, 0.3f, 0), 1f);
         }
     }
+
+    [PunRPC]
+    void Winner()
+    {
+        MainUi.endUiStatic.SetActive(true);
+    }
+
+    // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    // {
+    //     if(stream.IsWriting)
+    //     {
+    //         stream.SendNext(transform.position);
+    //     }
+    //     else
+    //     {
+    //         curPos = (Vector3)stream.ReceiveNext();
+    //     }
+    // }
 
     private void OnCollisionEnter(Collision collision)
     {

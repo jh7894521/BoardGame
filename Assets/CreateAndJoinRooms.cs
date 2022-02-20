@@ -31,7 +31,12 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
 
     //방
     List<RoomInfo> myList = new List<RoomInfo>();
-    int currentPage = 1, maxPage, multiple;
+    int currentPage = 1, maxPage = 0, multiple = 0;
+
+    public GameObject playerImg;
+    public Sprite playerReadyImg;
+    public GameObject gameStart;
+    public GameObject gameReady;
 
     //룸 유저 정보
     //public Image roomMasterImage;
@@ -44,6 +49,7 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     //방리스트 갱신
     public void MyListClick(int num)
     {
+        Debug.Log("num : " + num + " maxPage : " + maxPage + " multiple : " + multiple);
         if (num == -2) --currentPage;
         else if (num == -1) ++currentPage;
         else PhotonNetwork.JoinRoom(myList[multiple + num].Name);
@@ -96,6 +102,14 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     {
         roomUi.SetActive(true);
         lobbyUi.SetActive(false);
+        if(PhotonNetwork.IsMasterClient)
+        {
+            //방장이면 게임시작
+            gameStart.SetActive(true);
+        }else{
+            //플레이어면 게임준비
+            gameReady.SetActive(true);
+        }
         RoomRenewal();
     }
 
@@ -142,13 +156,33 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         PV.RPC("EnterGame", RpcTarget.All);
     }
 
+
+    public void ClickGameReady()
+    {
+        PV.RPC("ReadyGame", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void ReadyGame()
+    {
+        if(playerImg.GetComponent<Image>().sprite == null)
+        {
+            playerImg.GetComponent<Image>().sprite = playerReadyImg;
+        }
+        else
+        {
+            playerImg.GetComponent<Image>().sprite = null;
+        }
+    }
+
     [PunRPC]
     void EnterGame()
     {
-        //if (nickNameText.Equals(roomMasterText) && PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
-        //{
-        PhotonNetwork.LoadLevel("Game");
-        //}
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers && playerImg.GetComponent<Image>().sprite != null)
+        {
+            Debug.Log("게임시작이미지 이름 : " + playerImg.name);
+            PhotonNetwork.LoadLevel("Game");
+        }
     }
     //방
 
@@ -161,13 +195,6 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     {
         playerCount.text = (PhotonNetwork.CountOfPlayers - PhotonNetwork.CountOfPlayersInRooms) + " Lobby / " + PhotonNetwork.CountOfPlayers + " Connect";
     }
-
-    /*
-    public void CreateRoom()
-    {
-        PhotonNetwork.CreateRoom(createInput.text);
-    }
-    */
 
     public void JoinRoom()
     {

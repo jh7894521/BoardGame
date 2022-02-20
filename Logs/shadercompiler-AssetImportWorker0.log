@@ -1,4 +1,4 @@
-Base path: 'D:/유니티/Editor/2020.3.28f1/Editor/Data', plugins path 'D:/유니티/Editor/2020.3.28f1/Editor/Data/PlaybackEngines'
+Base path: 'D:/여기다가해라ㅡㅡ/진웅게임어플/2020.3.27f1/Editor/Data', plugins path 'D:/여기다가해라ㅡㅡ/진웅게임어플/2020.3.27f1/Editor/Data/PlaybackEngines'
 Cmd: initializeCompiler
 
 Unhandled exception: Protocol error - failed to read magic number (error -2147483644, transferred 0/4)
