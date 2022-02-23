@@ -1,1 +1,2 @@
 D:\유니티\BoardGame\obj\Debug\PunDemos.DemoSlotcarEditor.csprojAssemblyReference.cache
+D:\유니티\NewBoardGame\BoardGame\obj\Debug\PunDemos.DemoSlotcarEditor.csprojAssemblyReference.cache

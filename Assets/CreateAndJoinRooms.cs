@@ -178,11 +178,11 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     [PunRPC]
     void EnterGame()
     {
-        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers && playerImg.GetComponent<Image>().sprite != null)
-        {
+        //if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers && playerImg.GetComponent<Image>().sprite != null)
+        //{
             Debug.Log("게임시작이미지 이름 : " + playerImg.name);
             PhotonNetwork.LoadLevel("Game");
-        }
+        //}
     }
     //방
 

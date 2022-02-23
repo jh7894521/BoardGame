@@ -287,3 +287,11 @@ D:\유니티\BoardGame\obj\Debug\PhotonChat.csprojAssemblyReference.cache
 D:\유니티\BoardGame\obj\Debug\PhotonChat.csproj.CopyComplete
 D:\유니티\BoardGame\obj\Debug\PhotonChat.dll
 D:\유니티\BoardGame\obj\Debug\PhotonChat.pdb
+D:\유니티\NewBoardGame\BoardGame\Temp\bin\Debug\PhotonChat.dll
+D:\유니티\NewBoardGame\BoardGame\Temp\bin\Debug\PhotonChat.pdb
+D:\유니티\NewBoardGame\BoardGame\Temp\bin\Debug\Newtonsoft.Json.dll
+D:\유니티\NewBoardGame\BoardGame\Temp\bin\Debug\System.Numerics.Vectors.dll
+D:\유니티\NewBoardGame\BoardGame\obj\Debug\PhotonChat.csprojAssemblyReference.cache
+D:\유니티\NewBoardGame\BoardGame\obj\Debug\PhotonChat.csproj.CopyComplete
+D:\유니티\NewBoardGame\BoardGame\obj\Debug\PhotonChat.dll
+D:\유니티\NewBoardGame\BoardGame\obj\Debug\PhotonChat.pdb

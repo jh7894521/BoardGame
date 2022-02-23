@@ -18,6 +18,9 @@ public class PlayerScript : MonoBehaviour
     private int randomBlock = 0;
     private int bombPower = 100;
     private Vector3 curPos;
+
+    //public Slider hpBarSlider;
+
     void Start()
     {
         characterRigidbody = GetComponent<Rigidbody>();
@@ -33,8 +36,11 @@ public class PlayerScript : MonoBehaviour
     {
         if (view.IsMine)
         {
+            //hpBarSlider.value = health / allHealth;
+            //Debug.Log("hpBarSlider.value : " + hpBarSlider.value);
+
             //체력이 1보다 아래면 죽음 낙사하면 죽음 > 처음 위치로
-            if (health < 1 || transform.position.y < -1)
+            if (health < 1 || transform.position.y < -10)
             {
                 transform.position = new Vector3(-8, 0.3f, -7);
                 health = 10;
@@ -120,6 +126,11 @@ public class PlayerScript : MonoBehaviour
     //         curPos = (Vector3)stream.ReceiveNext();
     //     }
     // }
+    [PunRPC]
+    void BombRemove(GameObject bombName)
+    {
+        Destroy(bombName);
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -131,25 +142,36 @@ public class PlayerScript : MonoBehaviour
 
                 nowPosition = collision.transform.parent.name;
                 BombMove(nowPosition);
+                Debug.Log("GameObject.Find(collision.transform.name) : " + GameObject.Find(collision.transform.name));
+                Destroy(GameObject.Find(collision.transform.name));
+                //view.RPC("BombRemove", RpcTarget.All, GameObject.Find(collision.transform.name));
                 break;
-
             case "Thorn":   //가시
                 health--;
                 Debug.Log("체력 : " + health);
 
                 nowPosition = collision.transform.parent.name;
                 break;
-
             case "End":     //목표지점
                 //CreateAndJoinRooms.nickNameTextStatic.text = view.GetInstanceID().ToString();
                 MainUi.idTextStatic.text = CreateAndJoinRooms.nickNameTextStatic.text;
                 MainUi.endUiStatic.SetActive(true);
-
                 nowPosition = collision.transform.parent.name;
                 break;
             case "Water":   //물
                 nowPosition = collision.transform.name;
                 WaterMove(nowPosition);
+                break;
+            case "Spear":
+                health--;
+                Debug.Log("체력 : " + health);
+                nowPosition = collision.transform.parent.name;
+                break;
+            case "Trab":
+                nowPosition = collision.transform.parent.name;
+                break;
+            case "Ladder":  //사다리
+                transform.position = collision.transform.GetChild(0).position + new Vector3(0, int.Parse(collision.transform.name.Substring(nowPosition.Length - 2, 2)), 0);
                 break;
             default:
                 nowPosition = collision.transform.name;
@@ -214,5 +236,7 @@ public class PlayerScript : MonoBehaviour
                 characterRigidbody.AddForce(new Vector3(1f, 1f, 0) * bombPower);
             }
         }
+
+        //Destroy(blockArr[int.Parse(nowPosition.Substring(0, substringIndex)) - 1].transform.GetChild(0));
     }
 }
