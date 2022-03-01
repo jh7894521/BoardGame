@@ -9,6 +9,10 @@ TagManager:
   - Thorn
   - End
   - Water
+  - Ladder
+  - Trab
+  - Spear
+  - Desert
   layers:
   - Default
   - TransparentFX

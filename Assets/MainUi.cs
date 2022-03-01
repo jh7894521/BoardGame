@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
@@ -23,6 +25,7 @@ public class MainUi : MonoBehaviour
 
     public PhotonView PV;
     public static string winner;
+    public static string[] Players;
 
     private void Start()
     {
@@ -30,7 +33,7 @@ public class MainUi : MonoBehaviour
         idTextStatic = idText;
         turnPlayerText.text = PhotonNetwork.PlayerList[0].NickName;
 
-        if(PhotonNetwork.LocalPlayer.NickName != PhotonNetwork.PlayerList[0].NickName)
+        if (PhotonNetwork.LocalPlayer.NickName != PhotonNetwork.PlayerList[0].NickName)
         {
             goButton.interactable = false;
         }
@@ -39,12 +42,12 @@ public class MainUi : MonoBehaviour
     public void ClickGoButton()
     {
         PlayerScript.go = true;
-        diceNum = Random.Range(1,6);
+        diceNum = Random.Range(1, 6);
         Debug.Log("주사위 : " + diceNum);
         diceUi.GetComponent<Image>().sprite = dice[diceNum - 1];
 
         goButton.interactable = false;
-        PV.RPC("Turn", RpcTarget.All);
+        PV.RPC("Delay", RpcTarget.All, 1);    //~초 딜레이
     }
 
     public void ClickBackButton()
@@ -52,14 +55,14 @@ public class MainUi : MonoBehaviour
         SceneManager.LoadScene("Lobby");
     }
 
-
-    [PunRPC]
-    void Turn()
+    IEnumerator Turn(float second)
     {
-        if(turnPlayerText.text == PhotonNetwork.PlayerList[0].NickName)
+        //~초 딜레이
+        yield return new WaitForSeconds(second);
+        if (turnPlayerText.text == PhotonNetwork.PlayerList[0].NickName)
         {
             turnPlayerText.text = PhotonNetwork.PlayerList[1].NickName;
-            if(PhotonNetwork.LocalPlayer.NickName == PhotonNetwork.PlayerList[1].NickName)
+            if (PhotonNetwork.LocalPlayer.NickName == PhotonNetwork.PlayerList[1].NickName)
             {
                 goButton.interactable = true;
             }
@@ -67,10 +70,16 @@ public class MainUi : MonoBehaviour
         else
         {
             turnPlayerText.text = PhotonNetwork.PlayerList[0].NickName;
-            if(PhotonNetwork.LocalPlayer.NickName == PhotonNetwork.PlayerList[0].NickName)
+            if (PhotonNetwork.LocalPlayer.NickName == PhotonNetwork.PlayerList[0].NickName)
             {
                 goButton.interactable = true;
             }
         }
+    }
+
+    [PunRPC]
+    void Delay(float second)
+    {
+        StartCoroutine(Turn(second));
     }
 }

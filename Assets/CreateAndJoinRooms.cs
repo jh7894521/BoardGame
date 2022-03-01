@@ -30,8 +30,8 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     public Button NextButton;
 
     //방
-    List<RoomInfo> myList = new List<RoomInfo>();
-    int currentPage = 1, maxPage = 0, multiple = 0;
+    public List<RoomInfo> myList = new List<RoomInfo>();
+    int currentPage = 1, maxPage, multiple;
 
     public GameObject playerImg;
     public Sprite playerReadyImg;
@@ -49,7 +49,9 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     //방리스트 갱신
     public void MyListClick(int num)
     {
-        Debug.Log("num : " + num + " maxPage : " + maxPage + " multiple : " + multiple);
+        Debug.Log("Cell : " + CellButton[multiple + num]);
+        Debug.Log("num : " + num + " maxPage : " + maxPage + " multiple : " + multiple + " myList : " + myList.Count);
+        Debug.Log("[multiple + num] : " + (multiple + num) + " myList[multiple + num].Name : " + myList[multiple + num].Name);
         if (num == -2) --currentPage;
         else if (num == -1) ++currentPage;
         else PhotonNetwork.JoinRoom(myList[multiple + num].Name);
@@ -73,16 +75,25 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
             CellButton[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (multiple + i < myList.Count) ? myList[multiple + i].Name : "";
             CellButton[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = (multiple + i < myList.Count) ? myList[multiple + i].PlayerCount + "/" + myList[multiple + i].MaxPlayers : "";
         }
+        Debug.Log("myList[] : " + myList[0] + " myList.count : " + myList.Count);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        Debug.Log("dddd roomList : " + roomList.Count);
         int roomCount = roomList.Count;
         for (int i = 0; i < roomCount; i++)
         {
+            Debug.Log("dddd roomList[i].RemovedFromList : " + roomList[i].RemovedFromList);
             if (!roomList[i].RemovedFromList)
             {
-                if (!myList.Contains(roomList[i])) myList.Add(roomList[i]);
+                if (!myList.Contains(roomList[i])) 
+                {
+                    Debug.Log("myList 1 : " + myList.Count);
+                    myList.Add(roomList[i]);
+                    Debug.Log("myList 2 : " + myList.Count);
+                    Debug.Log("roomList[i] : " + myList[i]);
+                }
                 else myList[myList.IndexOf(roomList[i])] = roomList[i];
             }
             else if (myList.IndexOf(roomList[i]) != -1) myList.RemoveAt(myList.IndexOf(roomList[i]));
@@ -189,6 +200,12 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
     private void Awake()
     {
         nickNameTextStatic = nickNameText;
+        if(PhotonNetwork.LocalPlayer.NickName != "")
+        {
+            Debug.Log("PhotonNetwork.LocalPlayer.NickName : " + PhotonNetwork.LocalPlayer.NickName);
+            nickNameUi.SetActive(false);
+            lobbyUi.SetActive(true);
+        }
     }
 
     private void Update()
@@ -207,7 +224,20 @@ public class CreateAndJoinRooms : MonoBehaviourPunCallbacks
         nickNameText.text = PhotonNetwork.LocalPlayer.NickName;
         nickNameUi.SetActive(false);
         lobbyUi.SetActive(true);
-        myList.Clear();
+        roomUi.SetActive(false);
+        // myList.Clear();
+    }
+
+    public void Connect() => PhotonNetwork.ConnectUsingSettings();
+    public override void OnConnectedToMaster() => PhotonNetwork.JoinLobby();
+
+    public void Disconnect() => PhotonNetwork.Disconnect();
+
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        nickNameUi.SetActive(true);
+        lobbyUi.SetActive(false);
+        roomUi.SetActive(false);
     }
 
     public void ClickLobbyBackButton()
